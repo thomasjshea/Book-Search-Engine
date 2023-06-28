@@ -6,6 +6,7 @@ export const CREATE_USER = gql`
             token
             user {
                 _id
+                username
             }
         }
     }
@@ -17,6 +18,7 @@ export const LOGIN_USER = gql`
             token
             user {
              _id
+             username
             }
         }
     }
@@ -27,7 +29,14 @@ export const SAVE_BOOK = gql`
         saveBook (title: $title, authors: $authors, description: $description, bookId: $bookId, image: $image, link: $link) {
             _id
             username
-            savedBooks
+            savedBooks{
+                title
+                authors
+                description
+                bookId
+                image
+                link
+            }
         }
     }    
 `;
@@ -37,6 +46,13 @@ export const DELETE_BOOK = gql`
         deleteBook (bookId: $bookId) {
             _id
             username
-            savedBooks
+            savedBooks{
+                title
+                authors
+                description
+                bookId
+                image
+                link
+            }
         }
     }`
