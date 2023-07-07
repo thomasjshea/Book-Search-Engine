@@ -28,20 +28,29 @@ const resolvers = {
             const token = signToken(user)
             return { token, user}
         },
-        saveBook: async(parent, args) => {
-            const book = await Book.create(args);
+        saveBook: async(parent, { title, authors, description, bookId, image, link }, context) => {
 
             await User.findOneAndUpdate(
-                { title: title },
-                { authors: authors},
-                { description: description },
+                { _id: context.user._id},
                 {
-                    $addToSet: { savedBooks: book._id }
+                    $addToSet: { savedBooks: {
+                        title,  
+                        authors,
+                        description,
+                        bookId,
+                        image,
+                        link                        
+                    } }
                 }
             );
         },
-        deleteBook: async(parent, { bookId }) => {
-            return Book.findOneAndDelete({ _id: bookId });
+        deleteBook: async(parent, { bookId }, context) => {
+            return User.findOneAndUpdate(
+                { _id: context.user._id },
+                {
+                    $pull: { savedBooks: bookId }
+                }
+            )
         },
     },
 };
