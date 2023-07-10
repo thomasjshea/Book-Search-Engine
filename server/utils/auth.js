@@ -5,19 +5,21 @@ const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
 module.exports = {
-  authMiddleware : function({ req }) {
-    let token = req.body.token || req.query.token || req.header.authorization;
-
-    if (req.header.authorization) {
+  authMiddleware: function ({ req }) {
+    let token = req.body.token || req.query.token || req.headers.authorization;
+    if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
     }
-
+    
+    console.log(token)
     if (!token) {
-      return req  
+      console.log("NO TOKEN")
+      return req
     }
 
     try {
-      const { data } = jwt.verify(token, secret, { maxAge: expiration});
+      const { data } = jwt.verify(token, secret, { maxAge: expiration });
+      console.log("TOkEN MADE")
       req.user = data
     } catch {
       console.log('Invalid Token');

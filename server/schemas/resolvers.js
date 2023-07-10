@@ -29,20 +29,27 @@ const resolvers = {
             return { token, user}
         },
         saveBook: async(parent, { title, authors, description, bookId, image, link }, context) => {
+            // console.log(context)
+            try {
+                const user = await User.findOneAndUpdate(
+                     { _id: context.user._id},
+                     {
+                         $addToSet: { savedBooks: {
+                             title,  
+                             authors,
+                             description,
+                             bookId,
+                             image,
+                             link                        
+                         } }
+                     }
+                 );
 
-            await User.findOneAndUpdate(
-                { _id: context.user._id},
-                {
-                    $addToSet: { savedBooks: {
-                        title,  
-                        authors,
-                        description,
-                        bookId,
-                        image,
-                        link                        
-                    } }
-                }
-            );
+                 console.log(user)
+                 return user
+            } catch (err){
+                if (err) throw err
+            }
         },
         deleteBook: async(parent, { bookId }, context) => {
             return User.findOneAndUpdate(
